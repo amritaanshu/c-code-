@@ -1,0 +1,226 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_CUSTOMERS 100
+#define NAME_LENGTH 50
+#define ACCOUNT_TYPE_LENGTH 20
+
+// Structure to store customer details
+typedef struct {
+    int accountNumber;
+    char name[NAME_LENGTH];
+    char accountType[ACCOUNT_TYPE_LENGTH];
+    double balance;
+} Customer;
+
+Customer customers[MAX_CUSTOMERS];
+int totalCustomers = 0;
+
+// Function prototypes
+void addCustomer();
+void displayCustomers();
+void searchCustomer();
+void depositAmount();
+void withdrawAmount();
+void deleteCustomer();
+void menu();
+
+// Main function
+int main() {
+    while (1) {
+        menu();
+    }
+    return 0;
+}
+
+// Function to display the menu
+void menu() {
+    int choice;
+
+    printf("\n--- Bank Management System ---\n");
+    printf("1. Add Customer\n");
+    printf("2. Display All Customers\n");
+    printf("3. Search for a Customer\n");
+    printf("4. Deposit Amount\n");
+    printf("5. Withdraw Amount\n");
+    printf("6. Delete Customer\n");
+    printf("7. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1:
+            addCustomer();
+            break;
+        case 2:
+            displayCustomers();
+            break;
+        case 3:
+            searchCustomer();
+            break;
+        case 4:
+            depositAmount();
+            break;
+        case 5:
+            withdrawAmount();
+            break;
+        case 6:
+            deleteCustomer();
+            break;
+        case 7:
+            printf("Exiting the system. Goodbye!\n");
+            exit(0);
+        default:
+            printf("Invalid choice! Please try again.\n");
+    }
+}
+
+// Function to add a customer
+void addCustomer() {
+    if (totalCustomers >= MAX_CUSTOMERS) {
+        printf("Cannot add more customers. Maximum limit reached!\n");
+        return;
+    }
+
+    Customer newCustomer;
+    printf("\nEnter Account Number: ");
+    scanf("%d", &newCustomer.accountNumber);
+    printf("Enter Name: ");
+    scanf(" %[^
+]s", newCustomer.name);
+    printf("Enter Account Type (e.g., Savings/Current): ");
+    scanf(" %[^
+]s", newCustomer.accountType);
+    printf("Enter Initial Balance: ");
+    scanf("%lf", &newCustomer.balance);
+
+    customers[totalCustomers++] = newCustomer;
+    printf("Customer added successfully!\n");
+}
+
+// Function to display all customers
+void displayCustomers() {
+    if (totalCustomers == 0) {
+        printf("No customers to display!\n");
+        return;
+    }
+
+    printf("\n--- Customer List ---\n");
+    for (int i = 0; i < totalCustomers; i++) {
+        printf("\nAccount Number: %d\n", customers[i].accountNumber);
+        printf("Name: %s\n", customers[i].name);
+        printf("Account Type: %s\n", customers[i].accountType);
+        printf("Balance: %.2f\n", customers[i].balance);
+    }
+}
+
+// Function to search for a customer by account number
+void searchCustomer() {
+    if (totalCustomers == 0) {
+        printf("No customers to search!\n");
+        return;
+    }
+
+    int accountNumber;
+    printf("\nEnter Account Number to search: ");
+    scanf("%d", &accountNumber);
+
+    for (int i = 0; i < totalCustomers; i++) {
+        if (customers[i].accountNumber == accountNumber) {
+            printf("\nAccount Found!\n");
+            printf("Account Number: %d\n", customers[i].accountNumber);
+            printf("Name: %s\n", customers[i].name);
+            printf("Account Type: %s\n", customers[i].accountType);
+            printf("Balance: %.2f\n", customers[i].balance);
+            return;
+        }
+    }
+
+    printf("Account not found!\n");
+}
+
+// Function to deposit amount
+void depositAmount() {
+    if (totalCustomers == 0) {
+        printf("No customers available!\n");
+        return;
+    }
+
+    int accountNumber;
+    double amount;
+    printf("\nEnter Account Number: ");
+    scanf("%d", &accountNumber);
+
+    for (int i = 0; i < totalCustomers; i++) {
+        if (customers[i].accountNumber == accountNumber) {
+            printf("Enter amount to deposit: ");
+            scanf("%lf", &amount);
+
+            if (amount > 0) {
+                customers[i].balance += amount;
+                printf("Amount deposited successfully! New Balance: %.2f\n", customers[i].balance);
+            } else {
+                printf("Invalid amount!\n");
+            }
+            return;
+        }
+    }
+
+    printf("Account not found!\n");
+}
+
+// Function to withdraw amount
+void withdrawAmount() {
+    if (totalCustomers == 0) {
+        printf("No customers available!\n");
+        return;
+    }
+
+    int accountNumber;
+    double amount;
+    printf("\nEnter Account Number: ");
+    scanf("%d", &accountNumber);
+
+    for (int i = 0; i < totalCustomers; i++) {
+        if (customers[i].accountNumber == accountNumber) {
+            printf("Enter amount to withdraw: ");
+            scanf("%lf", &amount);
+
+            if (amount > 0 && customers[i].balance >= amount) {
+                customers[i].balance -= amount;
+                printf("Amount withdrawn successfully! New Balance: %.2f\n", customers[i].balance);
+            } else {
+                printf("Invalid amount or insufficient balance!\n");
+            }
+            return;
+        }
+    }
+
+    printf("Account not found!\n");
+}
+
+// Function to delete a customer
+void deleteCustomer() {
+    if (totalCustomers == 0) {
+        printf("No customers to delete!\n");
+        return;
+    }
+
+    int accountNumber;
+    printf("\nEnter Account Number to delete: ");
+    scanf("%d", &accountNumber);
+
+    for (int i = 0; i < totalCustomers; i++) {
+        if (customers[i].accountNumber == accountNumber) {
+            for (int j = i; j < totalCustomers - 1; j++) {
+                customers[j] = customers[j + 1];
+            }
+            totalCustomers--;
+            printf("Customer deleted successfully!\n");
+            return;
+        }
+    }
+
+    printf("Account not found!\n");
+}
